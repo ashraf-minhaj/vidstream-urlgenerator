@@ -1,0 +1,13 @@
+
+.DS_Store
+*.zip
+*.hcl
+*.0_x5
+*.tfstate
+*.backup
+*.backup
+
+src/*
+!src/vidstream-urlGenerator.py
+# !src/config.ini
+!src/requirements.txt
