@@ -11,3 +11,4 @@ src/*
 !src/vidstream-urlGenerator.py
 # !src/config.ini
 !src/requirements.txt
+!src/collection.json

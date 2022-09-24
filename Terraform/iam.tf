@@ -45,19 +45,13 @@ resource "aws_iam_policy" "policy" {
         "Resource": "arn:aws:s3:::*"
       },
     {
-      "Effect": "Allow",
-      "Action": [
-        "iam:PassRole"
+        "Effect": "Allow",
+        "Action": [
+            "dynamodb:DescribeTable",
+            "dynamodb:PutItem"
         ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "mediaconvert:*"
-      ],
-      "Resource": "*"
-    }
+        "Resource": "arn:aws:dynamodb:*:*:*"
+      }
   ]
 })
 }

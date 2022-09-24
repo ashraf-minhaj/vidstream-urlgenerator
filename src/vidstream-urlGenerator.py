@@ -67,10 +67,45 @@ def handler(event, context):
     logger.info("final object url with cloudfront: ")
     logger.info(object_url)
 
-    
-    response_status = 200
-    response_text = "Everything went well"
+    # connect to dynamo db
+    # object_name: category_fileName_resolution.mp4
+    # exmp:  python.string.360p.mp4
+    resolution = media_object.split('.')[-2]
+    logger.info("Getting media resolution")
+    logger.info(resolution)
 
+    # open json mediaconvert job template
+    logger.info("Reading collection json file")
+    with open("collection.json", "r") as jsonfile:
+        collection_object = json.load(jsonfile)
+        logger.info(collection_object)
+
+    # edit the collection object
+    logger.info("Editing collection obj")
+    collection_object['category'] = media_object.split('.')[0]
+    collection_object[resolution] = object_url
+
+    logger.info("Updated collection to be pu")
+    logger.info(collection_object)
+
+    # read collections and store in db
+    logger.info("Init boto client and connecting with table")
+    db_table = boto3.resource('dynamodb').Table("vidstream-urldb")  # connecting with table
+    logger.info("Connection with table: Success")
+    logger.info(f"Table status {db_table.table_status}")
+
+    # basic put item
+    try:
+        res = db_table.put_item(Item=collection_object)
+        response_status = res["ResponseMetadata"]["HTTPStatusCode"]
+        if  response_status == 200:
+            response_status = 200
+            response_text = "Everything went well"
+        else:
+            response_text = "Put item failed"
+    except Exception as e:
+        logger.exception(e)
+   
     return {
         'statusCode': response_status,
         'body': json.dumps(response_text)
